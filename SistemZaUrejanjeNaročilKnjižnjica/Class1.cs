@@ -33,7 +33,7 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             "Lahka", "Srednja", "Debela"
         };
     }
-    public abstract class Artikel:IProdajni
+    public abstract class Artikel : IProdajni
     {
         public decimal Cena
         {
@@ -87,7 +87,7 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         }
 
         public abstract decimal izracunCene();
-        
+
 
         public override string ToString()
         {
@@ -95,9 +95,9 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         }
     }
 
-        public class KratkaMajica : Artikel, IPrintable
-        {
-            public bool ImaPrint
+    public class KratkaMajica : Artikel, IPrintable
+    {
+        public bool ImaPrint
         {
             get
             {
@@ -113,12 +113,12 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             {
                 decimal cenaPrinta = 0m;
 
-                if(SprednjiPrint == true)
+                if (SprednjiPrint == true)
                 {
                     cenaPrinta = cenaPrinta + DopSpredaj;
                 }
 
-                if(ZadnjiPrint==true)
+                if (ZadnjiPrint == true)
                 {
                     cenaPrinta = cenaPrinta + DopZadaj;
                 }
@@ -128,97 +128,97 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         }
 
 
-            private string barva;
-            private string velikost;
+        private string barva;
+        private string velikost;
 
-            public string Barva
-            {
-                get { return barva; }
-                set
-                {
-                    barva = value;
-                }
-            }
-
-            public string Velikost
-            {
-                get { return velikost; }
-                set
-                {
-                    if (!Konstante.Velikosti.Contains(value)) Console.WriteLine("Napačna velikost");
-                    velikost = value;
-                }
-            }
-
-            public bool SprednjiPrint { get; set; }
-            public bool ZadnjiPrint { get; set; }
-
-            public static readonly decimal DopSpredaj = 3.50m;
-            public static readonly decimal DopZadaj = 4.00m;
-
-            public KratkaMajica(string ime, decimal cena, string barva,  string velikost, bool spredaj, bool zadaj) : base(ime, cena, "Kratka Majica")
-            {
-                Barva = barva;
-                Velikost = velikost;
-                SprednjiPrint = spredaj;
-                ZadnjiPrint = zadaj;
-            }
-
-            public override decimal izracunCene()
-            {
-                decimal cena = OsnovnaCena;
-
-                if (SprednjiPrint) cena += DopSpredaj;
-                if (ZadnjiPrint) cena += DopZadaj;
-                return cena;
-            }
-        }
-
-        public class Hoodie : Artikel
+        public string Barva
         {
-            private string barva;
-            private string debelina;
-
-            public string Barva
+            get { return barva; }
+            set
             {
-                get { return barva; }
-                set { barva = value; }
+                barva = value;
             }
-            
-
-            public string Debelina
-            {
-                get { return debelina; }
-
-                set
-                {
-                    if(!Konstante.Debeline.Contains(value)) Console.WriteLine("Napačna debelina");
-                    debelina = value;
-                }
-            }
-
-            public bool Zadrga { get; set; }
-
-            public static readonly decimal DopZadrga = 5.00m;
-            public static readonly decimal DopDebel = 6.00m;
-
-            public Hoodie(string ime, decimal cena, string barva,  string debelina, bool zadrga) : base (ime, cena, "Hoodie")
-            {
-                Barva = barva;
-                Debelina = debelina;
-                Zadrga = zadrga;
-            }
-
-            public override decimal izracunCene()
-            {
-                decimal cena = OsnovnaCena;
-
-                if (Zadrga) cena += DopZadrga;
-                if (Debelina == "Debela") cena += DopDebel;
-                return cena;
-            }
-
         }
+
+        public string Velikost
+        {
+            get { return velikost; }
+            set
+            {
+                if (!Konstante.Velikosti.Contains(value)) Console.WriteLine("Napačna velikost");
+                velikost = value;
+            }
+        }
+
+        public bool SprednjiPrint { get; set; }
+        public bool ZadnjiPrint { get; set; }
+
+        public static readonly decimal DopSpredaj = 3.50m;
+        public static readonly decimal DopZadaj = 4.00m;
+
+        public KratkaMajica(string ime, decimal cena, string barva, string velikost, bool spredaj, bool zadaj) : base(ime, cena, "Kratka Majica")
+        {
+            Barva = barva;
+            Velikost = velikost;
+            SprednjiPrint = spredaj;
+            ZadnjiPrint = zadaj;
+        }
+
+        public override decimal izracunCene()
+        {
+            decimal cena = OsnovnaCena;
+
+            if (SprednjiPrint) cena += DopSpredaj;
+            if (ZadnjiPrint) cena += DopZadaj;
+            return cena;
+        }
+    }
+
+    public class Hoodie : Artikel
+    {
+        private string barva;
+        private string debelina;
+
+        public string Barva
+        {
+            get { return barva; }
+            set { barva = value; }
+        }
+
+
+        public string Debelina
+        {
+            get { return debelina; }
+
+            set
+            {
+                if (!Konstante.Debeline.Contains(value)) Console.WriteLine("Napačna debelina");
+                debelina = value;
+            }
+        }
+
+        public bool Zadrga { get; set; }
+
+        public static readonly decimal DopZadrga = 5.00m;
+        public static readonly decimal DopDebel = 6.00m;
+
+        public Hoodie(string ime, decimal cena, string barva, string debelina, bool zadrga) : base(ime, cena, "Hoodie")
+        {
+            Barva = barva;
+            Debelina = debelina;
+            Zadrga = zadrga;
+        }
+
+        public override decimal izracunCene()
+        {
+            decimal cena = OsnovnaCena;
+
+            if (Zadrga) cena += DopZadrga;
+            if (Debelina == "Debela") cena += DopDebel;
+            return cena;
+        }
+
+    }
 
     public class Kupec
     {
@@ -243,14 +243,16 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         public string TelSt
         {
             get { return telSt; }
-            set {
+            set
+            {
                 if (value.Length != 9) return;
                 foreach (char c in value)
                 {
                     if (!char.IsDigit(c))
                         return;
                 }
-                telSt = value; }
+                telSt = value;
+            }
         }
 
         public string Email
@@ -277,8 +279,8 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         }
     }
 
-        public class NaročiloIzdelka
-        {
+    public class NaročiloIzdelka
+    {
         private int količina;
 
         public Artikel Artikel { get; }
@@ -311,7 +313,7 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         //operator za ceno
         public static decimal operator +(NaročiloIzdelka a, NaročiloIzdelka b)
         {
-           return a.KoncnaCena + b.KoncnaCena;
+            return a.KoncnaCena + b.KoncnaCena;
         }
         public static decimal operator +(decimal cena, NaročiloIzdelka n)
         {
@@ -328,7 +330,41 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         {
             Console.WriteLine($"Artikel {Artikel.IDIzdelka} je bil odstranjen");
         }
+    }
 
+
+
+    //indekser
+    public class Naročilo
+    {
+        private List<NaročiloIzdelka> postavka = new List<NaročiloIzdelka>();
+
+        public NaročiloIzdelka this[int i]
+        {
+            get { return postavka[i]; }
+        }
+
+        public int stPos
+        {
+            get { return postavka.Count; }
+        }
+
+        public void Dodaj(NaročiloIzdelka n)
+        {
+            postavka.Add(n);
+        }
+
+        public decimal SkupnaCena
+        {
+            get
+            {
+                decimal skupaj = 0m;
+                foreach (NaročiloIzdelka n in postavka)
+                    skupaj += n.KoncnaCena;
+
+                return skupaj;
+            }
+        }
     }
 }
 
