@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using SistemZaUrejanjeNaročilKnjižnjica;
 
@@ -14,7 +7,10 @@ namespace Sistem_za_urejanje_naročil_App
     public partial class Form1 : Form
     {
         Kupec aktivniKupec;
-        List<NaročiloIzdelka> narocilo = new List<NaročiloIzdelka>();
+
+        //uporablja se razred Naročilo z indekserjem
+        Naročilo narocilo = new Naročilo();
+
         public Form1()
         {
             InitializeComponent();
@@ -26,19 +22,21 @@ namespace Sistem_za_urejanje_naročil_App
         {
             Artikli.Items.Clear();
 
-            decimal skupaj = 0m;
+            labelIzpisKoncneCene.Text = narocilo.SkupnaCena.ToString("0.00") + "€";
 
-            foreach (NaročiloIzdelka x in narocilo)
+            //indekser v praksi
+            for (int i = 0; i < narocilo.stPos; i++)
             {
+                NaročiloIzdelka x = narocilo[i];   //indekser
                 Artikli.Items.Add(x);
-                skupaj += x;
+                Artikel a = x.Artikel;
+                decimal cena = a.izracunCene();
             }
-            labelIzpisKoncneCene.Text = skupaj.ToString("0.00") + "€";
-        }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
+            if (narocilo.stPos > 0)
+            {
+                var prva = narocilo[0];
+            }
         }
 
         private void buttonShraniKupca_Click(object sender, EventArgs e)
@@ -62,7 +60,7 @@ namespace Sistem_za_urejanje_naročil_App
 
         private void buttonDodajMajico_Click(object sender, EventArgs e)
         {
-            if(aktivniKupec == null)
+            if (aktivniKupec == null)
             {
                 MessageBox.Show("Ni aktivnega kupca");
                 return;
@@ -81,7 +79,16 @@ namespace Sistem_za_urejanje_naročil_App
             NaročiloIzdelka n = new NaročiloIzdelka(majica, 1);
             n.Kupec = aktivniKupec;
 
-            narocilo.Add(n);
+            narocilo.Dodaj(n);
+
+            //vmesniki
+            if (majica is IPrintable p && p.ImaPrint)
+            {
+                MessageBox.Show("Cena printa: " + p.CenaPrinta.ToString("0.00") + "€");
+            }
+
+            IProdajni prod = majica;
+            decimal cenaArtikla = prod.Cena;
 
             OsveziNarocilo();
 
@@ -89,7 +96,6 @@ namespace Sistem_za_urejanje_naročil_App
             checkBoxSprednjiPrt.Checked = false;
             checkBoxZadnjiPrt.Checked = false;
             comboBoxVelikostMajice.SelectedIndex = 0;
-
         }
 
         private void buttonDodajHoodie_Click(object sender, EventArgs e)
@@ -102,17 +108,20 @@ namespace Sistem_za_urejanje_naročil_App
 
             Hoodie hudi = new Hoodie
                 (
-                "Hoodie",
-                25m,
-                textBoxBarvaHoodie.Text,
-                comboBoxDebelina.Text,
-                checkBoxZadrga.Checked
+                    "Hoodie",
+                    25m,
+                    textBoxBarvaHoodie.Text,
+                    comboBoxDebelina.Text,
+                    checkBoxZadrga.Checked
                 );
 
             NaročiloIzdelka n = new NaročiloIzdelka(hudi, 1);
             n.Kupec = aktivniKupec;
 
-            narocilo.Add(n);
+            narocilo.Dodaj(n);
+
+            IProdajni prod = hudi;
+            decimal cenaArtikla = prod.Cena;
 
             OsveziNarocilo();
 
