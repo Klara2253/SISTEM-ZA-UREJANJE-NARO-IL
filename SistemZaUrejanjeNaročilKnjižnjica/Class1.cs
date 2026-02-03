@@ -7,6 +7,20 @@ using System.Threading.Tasks;
 
 namespace SistemZaUrejanjeNaročilKnjižnjica
 {
+    //vmesniki
+    public interface IProdajni
+    {
+        decimal Cena { get; }
+    }
+
+    public interface IPrintable
+    {
+        bool ImaPrint { get; }
+        decimal CenaPrinta { get; }
+    }
+
+
+
     //razred konstant ki jih nikoli ne spremenim
     public static class Konstante
     {
@@ -19,8 +33,14 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             "Lahka", "Srednja", "Debela"
         };
     }
-    public abstract class Artikel
+    public abstract class Artikel:IProdajni
     {
+        public decimal Cena
+        {
+            get { return izracunCene(); }
+        }
+
+
         private string imeArtikla;
         private decimal osnovnaCena;
         private string kategorija;
@@ -75,8 +95,39 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         }
     }
 
-        public class KratkaMajica : Artikel
+        public class KratkaMajica : Artikel, IPrintable
         {
+            public bool ImaPrint
+        {
+            get
+            {
+                if (SprednjiPrint == true || ZadnjiPrint == true)
+                { return true; }
+                else return false;
+            }
+        }
+
+        public decimal CenaPrinta
+        {
+            get
+            {
+                decimal cenaPrinta = 0m;
+
+                if(SprednjiPrint == true)
+                {
+                    cenaPrinta = cenaPrinta + DopSpredaj;
+                }
+
+                if(ZadnjiPrint==true)
+                {
+                    cenaPrinta = cenaPrinta + DopZadaj;
+                }
+
+                return cenaPrinta;
+            }
+        }
+
+
             private string barva;
             private string velikost;
 
