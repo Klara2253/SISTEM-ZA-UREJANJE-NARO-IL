@@ -19,7 +19,7 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             "Lahka", "Srednja", "Debela"
         };
     }
-    public class Artikel
+    public abstract class Artikel
     {
         private string imeArtikla;
         private decimal osnovnaCena;
@@ -53,7 +53,7 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         public string Kategorija
         {
             get { return kategorija; }
-            set { kategorija = value; }
+            protected set { kategorija = value; }
         }
 
         public Artikel(string ime, decimal cena, string kategorija)
@@ -66,10 +66,8 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             Kategorija = kategorija;
         }
 
-        public virtual decimal izracunCene()
-        {
-            return OsnovnaCena;
-        }
+        public abstract decimal izracunCene();
+        
 
         public override string ToString()
         {
@@ -258,11 +256,16 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
 
         //Preoblaganje operatorjev da vidimo ali gre za isti izdelek ali ne (zato gledamo ID)
         //z return new ustvarim nov objekt da lahko količini seštejem
-        public static NaročiloIzdelka operator +(NaročiloIzdelka a, NaročiloIzdelka b)
+
+        //operator za ceno
+        public static decimal operator +(NaročiloIzdelka a, NaročiloIzdelka b)
         {
-            if (a.Artikel.IDIzdelka != b.Artikel.IDIzdelka)
-                Console.WriteLine("Ni enak artikel");
-            return new NaročiloIzdelka(a.Artikel, a.Količina + b.Količina);
+           return a.KoncnaCena + b.KoncnaCena;
+        }
+        public static decimal operator +(decimal cena, NaročiloIzdelka n)
+        {
+            if (n is null) return cena;
+            return cena + n.KoncnaCena;
         }
 
         public override string ToString()

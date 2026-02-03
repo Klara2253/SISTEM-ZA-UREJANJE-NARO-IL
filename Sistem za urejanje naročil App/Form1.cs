@@ -31,9 +31,8 @@ namespace Sistem_za_urejanje_naročil_App
             foreach (NaročiloIzdelka x in narocilo)
             {
                 Artikli.Items.Add(x);
-                skupaj += x.KoncnaCena;
+                skupaj += x;
             }
-
             labelIzpisKoncneCene.Text = skupaj.ToString("0.00") + "€";
         }
 

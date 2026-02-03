@@ -297,6 +297,7 @@
             // 
             // comboBoxVelikostMajice
             // 
+            this.comboBoxVelikostMajice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxVelikostMajice.FormattingEnabled = true;
             this.comboBoxVelikostMajice.Location = new System.Drawing.Point(75, 69);
             this.comboBoxVelikostMajice.Name = "comboBoxVelikostMajice";
@@ -395,6 +396,7 @@
             // 
             // comboBoxDebelina
             // 
+            this.comboBoxDebelina.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDebelina.FormattingEnabled = true;
             this.comboBoxDebelina.Location = new System.Drawing.Point(83, 72);
             this.comboBoxDebelina.Name = "comboBoxDebelina";
