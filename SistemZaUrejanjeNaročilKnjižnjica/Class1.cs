@@ -339,6 +339,12 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
     {
         private List<NaročiloIzdelka> postavka = new List<NaročiloIzdelka>();
 
+        public delegate void PostavkaHandler(object sender, NaročiloIzdelka postavka);
+        public delegate void CenaHandler(object sender, decimal cena);
+
+        public event PostavkaHandler PostavkaDodana;
+        public event CenaHandler CenaSpremenjena;
+
         public NaročiloIzdelka this[int i]
         {
             get { return postavka[i]; }
@@ -352,6 +358,24 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         public void Dodaj(NaročiloIzdelka n)
         {
             postavka.Add(n);
+            OnPostavkaDodana(n);
+            OnCenaSpremenjena(SkupnaCena);
+        }
+
+        protected virtual void OnPostavkaDodana(NaročiloIzdelka p)
+        {
+            if (PostavkaDodana != null)
+            {
+                PostavkaDodana(this, p);
+            }
+        }
+
+        protected virtual void OnCenaSpremenjena(decimal cena)
+        {
+            if (CenaSpremenjena != null)
+            {
+                CenaSpremenjena(this, cena);
+            }
         }
 
         public decimal SkupnaCena

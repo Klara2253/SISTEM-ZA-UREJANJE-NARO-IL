@@ -16,6 +16,9 @@ namespace Sistem_za_urejanje_naročil_App
             InitializeComponent();
             comboBoxVelikostMajice.Items.AddRange(Konstante.Velikosti);
             comboBoxDebelina.Items.AddRange(Konstante.Debeline);
+
+            narocilo.PostavkaDodana += Narocilo_PostavkaDodana;
+            narocilo.CenaSpremenjena += Narocilo_CenaSpremenjena;
         }
 
         private void OsveziNarocilo()
@@ -37,6 +40,18 @@ namespace Sistem_za_urejanje_naročil_App
             {
                 var prva = narocilo[0];
             }
+        }
+
+        private void Narocilo_PostavkaDodana(object sender, NaročiloIzdelka p)
+        {
+            //ko se doda postavka jo dodamo v ListBox
+            Artikli.Items.Add(p);
+        }
+
+        private void Narocilo_CenaSpremenjena(object sender, decimal cena)
+        {
+            //ko se spremeni cena posodobimo label
+            labelIzpisKoncneCene.Text = cena.ToString("0.00") + "€";
         }
 
         private void buttonShraniKupca_Click(object sender, EventArgs e)
