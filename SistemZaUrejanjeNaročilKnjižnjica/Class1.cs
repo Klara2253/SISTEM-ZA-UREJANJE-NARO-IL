@@ -4,19 +4,26 @@ using System.Linq;
 
 namespace SistemZaUrejanjeNaročilKnjižnjica
 {
-    //vmesniki
+    /// <summary>
+    /// Vmesnik samo za artikle za prodajo
+    /// </summary>
     public interface IProdajni
     {
         decimal Cena { get; }
     }
-
+    /// <summary>
+    /// Vmesnik za izdelke, ki se lahko tiskajo. Pove ali ima artikel tisk
+    /// in vrne ceno izdelka
+    /// </summary>
     public interface IPrintable
     {
         bool ImaPrint { get; }
         decimal CenaPrinta { get; }
     }
 
-    //razred konstant
+    /// <summary>
+    /// Razred z konstantami za velikost in debelino
+    /// </summary>
     public static class Konstante
     {
         public static readonly string[] Velikosti =
@@ -29,7 +36,9 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             "Lahka", "Srednja", "Debela"
         };
     }
-
+    /// <summary>
+    /// Abstraktni razred za vse artikle, ki implementira vmesnik IProdajni
+    /// </summary>
     public abstract class Artikel : IProdajni
     {
         public decimal Cena
@@ -74,6 +83,13 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             protected set { kategorija = value; }
         }
 
+        /// <summary>
+        /// Konstruktor da ustvarimo artikel
+        /// </summary>
+        /// <param name="ime">Ime artikla</param>
+        /// <param name="cena">Osnovna cena</param>
+        /// <param name="kategorija">Kategorija</param>
+
         public Artikel(string ime, decimal cena, string kategorija)
         {
             IDIzdelka = ++stevecID;
@@ -84,9 +100,17 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             Kategorija = kategorija;
         }
 
+        /// <summary>
+        /// Izracun cene
+        /// </summary>
+        /// <returns></returns>
         public abstract decimal izracunCene();
 
         //virtualna metoda
+        /// <summary>
+        /// Vrne vse podrobnosti izdelka
+        /// </summary>
+        /// <returns>Podrobnosti izdelka</returns>
         public virtual string VrniPodrobnosti()
         {
             return $"#{IDIzdelka}, {ImeArtikla}, kategorija: {Kategorija}, cena: {izracunCene():0.00}€";
@@ -98,6 +122,9 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         }
     }
 
+    /// <summary>
+    /// Razred za kartko majico, ki zopet implementira IProdajni
+    /// </summary>
     public class KratkaMajica : Artikel, IPrintable
     {
         private string barva;
@@ -153,7 +180,15 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
                 return cenaPrinta;
             }
         }
-
+        /// <summary>
+        /// Konstruktor ki ustvari kratko majico
+        /// </summary>
+        /// <param name="ime">Ime</param>
+        /// <param name="cena">Cena kratke majice</param>
+        /// <param name="barva">Barva majice</param>
+        /// <param name="velikost">Velikost majice</param>
+        /// <param name="spredaj">Ali je tisk spredaj</param>
+        /// <param name="zadaj">Ali je tisk zadaj</param>
         public KratkaMajica(string ime, decimal cena, string barva, string velikost, bool spredaj, bool zadaj)
             : base(ime, cena, "Kratka majica")
         {
@@ -162,7 +197,10 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             SprednjiPrint = spredaj;
             ZadnjiPrint = zadaj;
         }
-
+        /// <summary>
+        /// Izračuna ceno
+        /// </summary>
+        /// <returns>Končna cena</returns>
         public override decimal izracunCene()
         {
             decimal cena = OsnovnaCena;
@@ -176,13 +214,18 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             return cena;
         }
 
-        //override virtualne metode
+        /// <summary>
+        /// Vrne vse podrobnosti kratke majice
+        /// </summary>
+        /// <returns>Podrobnosti kratke majice</returns>
         public override string VrniPodrobnosti()
         {
             return $"#{IDIzdelka}, {ImeArtikla}, barva: {Barva}, velikost: {Velikost}, print: {ImaPrint}, cena: {izracunCene():0.00}€";
         }
     }
-
+    /// <summary>
+    /// Razred za pulover
+    /// </summary>
     public class Hoodie : Artikel
     {
         private string barva;
@@ -214,6 +257,14 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         public static readonly decimal DopZadrga = 5.00m;
         public static readonly decimal DopDebel = 6.00m;
 
+        /// <summary>
+        /// Konstruktor ki ustvari pulover
+        /// </summary>
+        /// <param name="ime">Ime</param>
+        /// <param name="cena">Cena puloverja</param>
+        /// <param name="barva">Barva puloverja</param>
+        /// <param name="debelina">Debelina puloverja</param>
+        /// <param name="zadrga">Ali ima zadrgo ali ne</param>
         public Hoodie(string ime, decimal cena, string barva, string debelina, bool zadrga)
             : base(ime, cena, "Hoodie")
         {
@@ -221,7 +272,10 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             Debelina = debelina;
             Zadrga = zadrga;
         }
-
+        /// <summary>
+        /// Izracuna ceno puloverja
+        /// </summary>
+        /// <returns>Končna cena</returns>
         public override decimal izracunCene()
         {
             decimal cena = OsnovnaCena;
@@ -235,13 +289,18 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             return cena;
         }
 
-        //override virtualne metode
+        /// <summary>
+        /// Vrne podrobnosti puloverja
+        /// </summary>
+        /// <returns>Podrobnosti puloverja</returns>
         public override string VrniPodrobnosti()
         {
             return $"#{IDIzdelka}, {ImeArtikla}, barva: {Barva}, debelina: {Debelina}, zadrga: {Zadrga}, cena: {izracunCene():0.00}€";
         }
     }
-
+    /// <summary>
+    /// Razred za kupca
+    /// </summary>
     public class Kupec
     {
         private string ime;
@@ -299,7 +358,13 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
                 email = value;
             }
         }
-
+        /// <summary>
+        /// Ustvarimo kupca
+        /// </summary>
+        /// <param name="ime">Ime kupca</param>
+        /// <param name="priimek">Priimek kupca</param>
+        /// <param name="telst">Telefonska številka kupca</param>
+        /// <param name="email">Email kupca</param>
         public Kupec(string ime, string priimek, string telst, string email)
         {
             Ime = ime;
@@ -313,7 +378,9 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             return $"Ime: {Ime}, priimek: {Priimek}, telefonska številka: {TelSt}, email: {Email}";
         }
     }
-
+    /// <summary>
+    /// Razred za eno postavko
+    /// </summary>
     public class NaročiloIzdelka
     {
         private int količina;
@@ -340,20 +407,27 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         {
             get { return Artikel.izracunCene() * Količina; }
         }
-
+        /// <summary>
+        /// Konstrukor ki naredi eno postavko
+        /// </summary>
+        /// <param name="artikel">Artikel</param>
+        /// <param name="količina">Količina</param>
         public NaročiloIzdelka(Artikel artikel, int količina)
         {
             Artikel = artikel;
             Količina = količina;
         }
 
-        //operator za seštevanje dveh postavk
+        /// <summary>
+        /// Operator da sešteje dve postavki
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static decimal operator +(NaročiloIzdelka a, NaročiloIzdelka b)
         {
             return a.KoncnaCena + b.KoncnaCena;
         }
-
-        //operator za seštevanje decimal in postavka
         public static decimal operator +(decimal cena, NaročiloIzdelka n)
         {
             if (n == null)
@@ -366,21 +440,39 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         {
             return $"{Artikel}, količina: {Količina}, skupaj: {KoncnaCena:0.00}€";
         }
-
+        /// <summary>
+        /// Destruktor
+        /// </summary>
         ~NaročiloIzdelka()
         {
             Console.WriteLine($"Artikel {Artikel.IDIzdelka} je bil odstranjen");
         }
     }
-
+    /// <summary>
+    /// Razred za upravljanje naročila
+    /// </summary>
     public class Naročilo
     {
         private List<NaročiloIzdelka> postavka = new List<NaročiloIzdelka>();
-
+        /// <summary>
+        /// Delegat za postavko ki smo jo dodali
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="postavka"></param>
         public delegate void PostavkaHandler(object sender, NaročiloIzdelka postavka);
+        /// <summary>
+        /// Delegat za spremembo cene
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="cena"></param>
         public delegate void CenaHandler(object sender, decimal cena);
-
+        /// <summary>
+        /// Dogodek ob dodaji nove postavke
+        /// </summary>
         public event PostavkaHandler PostavkaDodana;
+        /// <summary>
+        /// Dogodek ob spremembi cene
+        /// </summary>
         public event CenaHandler CenaSpremenjena;
 
         public NaročiloIzdelka this[int i]
@@ -393,19 +485,29 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             get { return postavka.Count; }
         }
 
+        /// <summary>
+        /// Doda novo postavko
+        /// </summary>
+        /// <param name="n"></param>
         public void Dodaj(NaročiloIzdelka n)
         {
             postavka.Add(n);
             OnPostavkaDodana(n);
             OnCenaSpremenjena(SkupnaCena);
         }
-
+        /// <summary>
+        /// Sproži dogodek ko se postavka doda
+        /// </summary>
+        /// <param name="p"></param>
         protected virtual void OnPostavkaDodana(NaročiloIzdelka p)
         {
             if (PostavkaDodana != null)
                 PostavkaDodana(this, p);
         }
-
+        /// <summary>
+        /// Sproži dogodek ko se cena spremeni
+        /// </summary>
+        /// <param name="cena"></param>
         protected virtual void OnCenaSpremenjena(decimal cena)
         {
             if (CenaSpremenjena != null)
