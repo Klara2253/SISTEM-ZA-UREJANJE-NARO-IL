@@ -71,6 +71,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.panel8 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
+            this.buttonPocisti = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -432,12 +433,13 @@
             // 
             this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel4.Controls.Add(this.buttonPocisti);
             this.panel4.Controls.Add(this.labelIzpisKoncneCene);
             this.panel4.Controls.Add(this.label14);
             this.panel4.Controls.Add(this.Artikli);
             this.panel4.Location = new System.Drawing.Point(846, 69);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(275, 257);
+            this.panel4.Size = new System.Drawing.Size(275, 280);
             this.panel4.TabIndex = 4;
             // 
             // labelIzpisKoncneCene
@@ -507,6 +509,16 @@
             this.label5.Size = new System.Drawing.Size(76, 22);
             this.label5.TabIndex = 0;
             this.label5.Text = "Naročilo";
+            // 
+            // buttonPocisti
+            // 
+            this.buttonPocisti.Location = new System.Drawing.Point(11, 250);
+            this.buttonPocisti.Name = "buttonPocisti";
+            this.buttonPocisti.Size = new System.Drawing.Size(75, 23);
+            this.buttonPocisti.TabIndex = 3;
+            this.buttonPocisti.Text = "Počisti ";
+            this.buttonPocisti.UseVisualStyleBackColor = true;
+            this.buttonPocisti.Click += new System.EventHandler(this.buttonPocisti_Click);
             // 
             // Form1
             // 
@@ -592,6 +604,7 @@
         private System.Windows.Forms.ListBox Artikli;
         private System.Windows.Forms.Label labelIzpisKoncneCene;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Button buttonPocisti;
     }
 }
 

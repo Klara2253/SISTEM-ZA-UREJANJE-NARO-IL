@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SistemZaUrejanjeNaročilKnjižnjica
 {
@@ -19,27 +16,26 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         decimal CenaPrinta { get; }
     }
 
-
-
-    //razred konstant ki jih nikoli ne spremenim
+    //razred konstant
     public static class Konstante
     {
         public static readonly string[] Velikosti =
         {
             "XS", "S", "M", "L", "XL", "XXL"
         };
+
         public static readonly string[] Debeline =
         {
             "Lahka", "Srednja", "Debela"
         };
     }
+
     public abstract class Artikel : IProdajni
     {
         public decimal Cena
         {
             get { return izracunCene(); }
         }
-
 
         private string imeArtikla;
         private decimal osnovnaCena;
@@ -49,10 +45,7 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         public const decimal DDV = 0.22m;
         public readonly DateTime Ustvarjeno;
 
-        public int IDIzdelka
-        {
-            get;
-        }
+        public int IDIzdelka { get; }
 
         public string ImeArtikla
         {
@@ -65,7 +58,12 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             get { return osnovnaCena; }
             set
             {
-                if (value <= 0) Console.WriteLine("Cena mora biti večja od 0");
+                if (value <= 0)
+                {
+                    Console.WriteLine("Cena mora biti večja od 0");
+                    return;
+                }
+
                 osnovnaCena = value;
             }
         }
@@ -88,56 +86,27 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
 
         public abstract decimal izracunCene();
 
+        //virtualna metoda
+        public virtual string VrniPodrobnosti()
+        {
+            return $"#{IDIzdelka}, {ImeArtikla}, kategorija: {Kategorija}, cena: {izracunCene():0.00}€";
+        }
 
         public override string ToString()
         {
-            return ($"#{IDIzdelka}, {ImeArtikla}, {izracunCene().ToString("0.00")}€");
+            return VrniPodrobnosti();
         }
     }
 
     public class KratkaMajica : Artikel, IPrintable
     {
-        public bool ImaPrint
-        {
-            get
-            {
-                if (SprednjiPrint == true || ZadnjiPrint == true)
-                { return true; }
-                else return false;
-            }
-        }
-
-        public decimal CenaPrinta
-        {
-            get
-            {
-                decimal cenaPrinta = 0m;
-
-                if (SprednjiPrint == true)
-                {
-                    cenaPrinta = cenaPrinta + DopSpredaj;
-                }
-
-                if (ZadnjiPrint == true)
-                {
-                    cenaPrinta = cenaPrinta + DopZadaj;
-                }
-
-                return cenaPrinta;
-            }
-        }
-
-
         private string barva;
         private string velikost;
 
         public string Barva
         {
             get { return barva; }
-            set
-            {
-                barva = value;
-            }
+            set { barva = value; }
         }
 
         public string Velikost
@@ -145,7 +114,12 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             get { return velikost; }
             set
             {
-                if (!Konstante.Velikosti.Contains(value)) Console.WriteLine("Napačna velikost");
+                if (!Konstante.Velikosti.Contains(value))
+                {
+                    Console.WriteLine("Napačna velikost");
+                    return;
+                }
+
                 velikost = value;
             }
         }
@@ -156,7 +130,32 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         public static readonly decimal DopSpredaj = 3.50m;
         public static readonly decimal DopZadaj = 4.00m;
 
-        public KratkaMajica(string ime, decimal cena, string barva, string velikost, bool spredaj, bool zadaj) : base(ime, cena, "Kratka Majica")
+        public bool ImaPrint
+        {
+            get
+            {
+                return SprednjiPrint || ZadnjiPrint;
+            }
+        }
+
+        public decimal CenaPrinta
+        {
+            get
+            {
+                decimal cenaPrinta = 0m;
+
+                if (SprednjiPrint)
+                    cenaPrinta += DopSpredaj;
+
+                if (ZadnjiPrint)
+                    cenaPrinta += DopZadaj;
+
+                return cenaPrinta;
+            }
+        }
+
+        public KratkaMajica(string ime, decimal cena, string barva, string velikost, bool spredaj, bool zadaj)
+            : base(ime, cena, "Kratka majica")
         {
             Barva = barva;
             Velikost = velikost;
@@ -168,9 +167,19 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         {
             decimal cena = OsnovnaCena;
 
-            if (SprednjiPrint) cena += DopSpredaj;
-            if (ZadnjiPrint) cena += DopZadaj;
+            if (SprednjiPrint)
+                cena += DopSpredaj;
+
+            if (ZadnjiPrint)
+                cena += DopZadaj;
+
             return cena;
+        }
+
+        //override virtualne metode
+        public override string VrniPodrobnosti()
+        {
+            return $"#{IDIzdelka}, {ImeArtikla}, barva: {Barva}, velikost: {Velikost}, print: {ImaPrint}, cena: {izracunCene():0.00}€";
         }
     }
 
@@ -185,14 +194,17 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             set { barva = value; }
         }
 
-
         public string Debelina
         {
             get { return debelina; }
-
             set
             {
-                if (!Konstante.Debeline.Contains(value)) Console.WriteLine("Napačna debelina");
+                if (!Konstante.Debeline.Contains(value))
+                {
+                    Console.WriteLine("Napačna debelina");
+                    return;
+                }
+
                 debelina = value;
             }
         }
@@ -202,7 +214,8 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         public static readonly decimal DopZadrga = 5.00m;
         public static readonly decimal DopDebel = 6.00m;
 
-        public Hoodie(string ime, decimal cena, string barva, string debelina, bool zadrga) : base(ime, cena, "Hoodie")
+        public Hoodie(string ime, decimal cena, string barva, string debelina, bool zadrga)
+            : base(ime, cena, "Hoodie")
         {
             Barva = barva;
             Debelina = debelina;
@@ -213,11 +226,20 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         {
             decimal cena = OsnovnaCena;
 
-            if (Zadrga) cena += DopZadrga;
-            if (Debelina == "Debela") cena += DopDebel;
+            if (Zadrga)
+                cena += DopZadrga;
+
+            if (Debelina == "Debela")
+                cena += DopDebel;
+
             return cena;
         }
 
+        //override virtualne metode
+        public override string VrniPodrobnosti()
+        {
+            return $"#{IDIzdelka}, {ImeArtikla}, barva: {Barva}, debelina: {Debelina}, zadrga: {Zadrga}, cena: {izracunCene():0.00}€";
+        }
     }
 
     public class Kupec
@@ -226,7 +248,6 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         private string priimek;
         private string telSt;
         private string email;
-
 
         public string Ime
         {
@@ -245,12 +266,21 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             get { return telSt; }
             set
             {
-                if (value.Length != 9) return;
+                if (value.Length != 9)
+                {
+                    Console.WriteLine("Telefonska številka mora imeti 9 številk");
+                    return;
+                }
+
                 foreach (char c in value)
                 {
                     if (!char.IsDigit(c))
+                    {
+                        Console.WriteLine("Telefonska številka sme vsebovati samo številke");
                         return;
+                    }
                 }
+
                 telSt = value;
             }
         }
@@ -260,7 +290,12 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             get { return email; }
             set
             {
-                if (!value.Contains("@")) Console.WriteLine("Napačen email");
+                if (!value.Contains("@"))
+                {
+                    Console.WriteLine("Napačen email");
+                    return;
+                }
+
                 email = value;
             }
         }
@@ -275,7 +310,7 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
 
         public override string ToString()
         {
-            return ($"Ime: {Ime}, priimek: {Priimek}, telefonska številka: {TelSt}, email: {Email}");
+            return $"Ime: {Ime}, priimek: {Priimek}, telefonska številka: {TelSt}, email: {Email}";
         }
     }
 
@@ -291,7 +326,12 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             get { return količina; }
             private set
             {
-                if (value <= 0) Console.WriteLine("Količina mora biti več od 0");
+                if (value <= 0)
+                {
+                    Console.WriteLine("Količina mora biti več od 0");
+                    return;
+                }
+
                 količina = value;
             }
         }
@@ -307,23 +347,24 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             Količina = količina;
         }
 
-        //Preoblaganje operatorjev da vidimo ali gre za isti izdelek ali ne (zato gledamo ID)
-        //z return new ustvarim nov objekt da lahko količini seštejem
-
-        //operator za ceno
+        //operator za seštevanje dveh postavk
         public static decimal operator +(NaročiloIzdelka a, NaročiloIzdelka b)
         {
             return a.KoncnaCena + b.KoncnaCena;
         }
+
+        //operator za seštevanje decimal in postavka
         public static decimal operator +(decimal cena, NaročiloIzdelka n)
         {
-            if (n is null) return cena;
+            if (n == null)
+                return cena;
+
             return cena + n.KoncnaCena;
         }
 
         public override string ToString()
         {
-            return ($"{Artikel}, {Količina} in {KoncnaCena.ToString("0.00")}€");
+            return $"{Artikel}, količina: {Količina}, skupaj: {KoncnaCena:0.00}€";
         }
 
         ~NaročiloIzdelka()
@@ -332,9 +373,6 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         }
     }
 
-
-
-    //indekser
     public class Naročilo
     {
         private List<NaročiloIzdelka> postavka = new List<NaročiloIzdelka>();
@@ -365,17 +403,13 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
         protected virtual void OnPostavkaDodana(NaročiloIzdelka p)
         {
             if (PostavkaDodana != null)
-            {
                 PostavkaDodana(this, p);
-            }
         }
 
         protected virtual void OnCenaSpremenjena(decimal cena)
         {
             if (CenaSpremenjena != null)
-            {
                 CenaSpremenjena(this, cena);
-            }
         }
 
         public decimal SkupnaCena
@@ -383,12 +417,14 @@ namespace SistemZaUrejanjeNaročilKnjižnjica
             get
             {
                 decimal skupaj = 0m;
+
                 foreach (NaročiloIzdelka n in postavka)
+                {
                     skupaj += n.KoncnaCena;
+                }
 
                 return skupaj;
             }
         }
     }
 }
-

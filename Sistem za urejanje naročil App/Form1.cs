@@ -7,15 +7,17 @@ namespace Sistem_za_urejanje_naročil_App
     public partial class Form1 : Form
     {
         Kupec aktivniKupec;
-
-        //uporablja se razred Naročilo z indekserjem
         Naročilo narocilo = new Naročilo();
 
         public Form1()
         {
             InitializeComponent();
+
             comboBoxVelikostMajice.Items.AddRange(Konstante.Velikosti);
             comboBoxDebelina.Items.AddRange(Konstante.Debeline);
+
+            comboBoxVelikostMajice.SelectedIndex = 0;
+            comboBoxDebelina.SelectedIndex = 0;
 
             narocilo.PostavkaDodana += Narocilo_PostavkaDodana;
             narocilo.CenaSpremenjena += Narocilo_CenaSpremenjena;
@@ -25,32 +27,35 @@ namespace Sistem_za_urejanje_naročil_App
         {
             Artikli.Items.Clear();
 
-            labelIzpisKoncneCene.Text = narocilo.SkupnaCena.ToString("0.00") + "€";
+            decimal skupaj = 0m;
 
-            //indekser v praksi
+            // indekser in operator 
             for (int i = 0; i < narocilo.stPos; i++)
             {
-                NaročiloIzdelka x = narocilo[i];   //indekser
+                NaročiloIzdelka x = narocilo[i];
                 Artikli.Items.Add(x);
-                Artikel a = x.Artikel;
-                decimal cena = a.izracunCene();
+
+                skupaj += x;
+
+                string opis = x.Artikel.VrniPodrobnosti();
             }
+
+            labelIzpisKoncneCene.Text = skupaj.ToString("0.00") + "€";
 
             if (narocilo.stPos > 0)
             {
-                var prva = narocilo[0];
+                NaročiloIzdelka prva = narocilo[0];
             }
         }
-
+        //odzivni metodi
         private void Narocilo_PostavkaDodana(object sender, NaročiloIzdelka p)
         {
-            //ko se doda postavka jo dodamo v ListBox
-            Artikli.Items.Add(p);
+            MessageBox.Show("Dodana postavka: " + p.Artikel.ImeArtikla);
+            OsveziNarocilo();
         }
 
         private void Narocilo_CenaSpremenjena(object sender, decimal cena)
         {
-            //ko se spremeni cena posodobimo label
             labelIzpisKoncneCene.Text = cena.ToString("0.00") + "€";
         }
 
@@ -62,13 +67,12 @@ namespace Sistem_za_urejanje_naročil_App
                 return;
             }
 
-            aktivniKupec = new Kupec
-                (
-                    textBoxIme.Text,
-                    textBoxPriimek.Text,
-                    textBoxTelŠt.Text,
-                    textBoxEmail.Text
-                );
+            aktivniKupec = new Kupec(
+                textBoxIme.Text,
+                textBoxPriimek.Text,
+                textBoxTelŠt.Text,
+                textBoxEmail.Text
+            );
 
             labelIzpisAktivnegaKupca.Text = aktivniKupec.ToString();
         }
@@ -81,22 +85,21 @@ namespace Sistem_za_urejanje_naročil_App
                 return;
             }
 
-            KratkaMajica majica = new KratkaMajica
-                (
-                    "Kratka majica",
-                    12m,
-                    textBoxBarvaMajice.Text,
-                    comboBoxVelikostMajice.Text,
-                    checkBoxSprednjiPrt.Checked,
-                    checkBoxZadnjiPrt.Checked
-                );
+            KratkaMajica majica = new KratkaMajica(
+                "Kratka majica",
+                12m,
+                textBoxBarvaMajice.Text,
+                comboBoxVelikostMajice.Text,
+                checkBoxSprednjiPrt.Checked,
+                checkBoxZadnjiPrt.Checked
+            );
 
             NaročiloIzdelka n = new NaročiloIzdelka(majica, 1);
             n.Kupec = aktivniKupec;
 
             narocilo.Dodaj(n);
 
-            //vmesniki
+            //vmesnik
             if (majica is IPrintable p && p.ImaPrint)
             {
                 MessageBox.Show("Cena printa: " + p.CenaPrinta.ToString("0.00") + "€");
@@ -105,7 +108,7 @@ namespace Sistem_za_urejanje_naročil_App
             IProdajni prod = majica;
             decimal cenaArtikla = prod.Cena;
 
-            OsveziNarocilo();
+            MessageBox.Show(majica.VrniPodrobnosti());
 
             textBoxBarvaMajice.Clear();
             checkBoxSprednjiPrt.Checked = false;
@@ -121,14 +124,13 @@ namespace Sistem_za_urejanje_naročil_App
                 return;
             }
 
-            Hoodie hudi = new Hoodie
-                (
-                    "Hoodie",
-                    25m,
-                    textBoxBarvaHoodie.Text,
-                    comboBoxDebelina.Text,
-                    checkBoxZadrga.Checked
-                );
+            Hoodie hudi = new Hoodie(
+                "Hoodie",
+                25m,
+                textBoxBarvaHoodie.Text,
+                comboBoxDebelina.Text,
+                checkBoxZadrga.Checked
+            );
 
             NaročiloIzdelka n = new NaročiloIzdelka(hudi, 1);
             n.Kupec = aktivniKupec;
@@ -138,11 +140,22 @@ namespace Sistem_za_urejanje_naročil_App
             IProdajni prod = hudi;
             decimal cenaArtikla = prod.Cena;
 
-            OsveziNarocilo();
+            MessageBox.Show(hudi.VrniPodrobnosti());
 
             textBoxBarvaHoodie.Clear();
             checkBoxZadrga.Checked = false;
             comboBoxDebelina.SelectedIndex = 0;
+        }
+
+        private void buttonPocisti_Click(object sender, EventArgs e)
+        {
+            narocilo = new Naročilo();
+
+            Artikli.Items.Clear();
+            labelIzpisKoncneCene.Text = "0.00€";
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
     }
 }
