@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SistemZaUrejanjeNaročilKnjižnjica</name>
+    </assembly>
+    <members>
+        <member name="T:SistemZaUrejanjeNaročilKnjižnjica.IProdajni">
+            <summary>
+            Vmesnik samo za artikle za prodajo
+            </summary>
+        </member>
+        <member name="T:SistemZaUrejanjeNaročilKnjižnjica.IPrintable">
+            <summary>
+            Vmesnik za izdelke, ki se lahko tiskajo. Pove ali ima artikel tisk
+            in vrne ceno izdelka
+            </summary>
+        </member>
+        <member name="T:SistemZaUrejanjeNaročilKnjižnjica.Konstante">
+            <summary>
+            Razred z konstantami za velikost in debelino
+            </summary>
+        </member>
+        <member name="T:SistemZaUrejanjeNaročilKnjižnjica.Artikel">
+            <summary>
+            Abstraktni razred za vse artikle, ki implementira vmesnik IProdajni
+            </summary>
+        </member>
+        <member name="M:SistemZaUrejanjeNaročilKnjižnjica.Artikel.#ctor(System.String,System.Decimal,System.String)">
+            <summary>
+            Konstruktor da ustvarimo artikel
+            </summary>
+            <param name="ime">Ime artikla</param>
+            <param name="cena">Osnovna cena</param>
+            <param name="kategorija">Kategorija</param>
+        </member>
+        <member name="M:SistemZaUrejanjeNaročilKnjižnjica.Artikel.izracunCene">
+            <summary>
+            Izracun cene
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SistemZaUrejanjeNaročilKnjižnjica.Artikel.VrniPodrobnosti">
+            <summary>
+            Vrne vse podrobnosti izdelka
+            </summary>
+            <returns>Podrobnosti izdelka</returns>
+        </member>
+        <member name="T:SistemZaUrejanjeNaročilKnjižnjica.KratkaMajica">
+            <summary>
+            Razred za kartko majico, ki zopet implementira IProdajni
+            </summary>
+        </member>
+        <member name="M:SistemZaUrejanjeNaročilKnjižnjica.KratkaMajica.#ctor(System.String,System.Decimal,System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Konstruktor ki ustvari kratko majico
+            </summary>
+            <param name="ime">Ime</param>
+            <param name="cena">Cena kratke majice</param>
+            <param name="barva">Barva majice</param>
+            <param name="velikost">Velikost majice</param>
+            <param name="spredaj">Ali je tisk spredaj</param>
+            <param name="zadaj">Ali je tisk zadaj</param>
+        </member>
+        <member name="M:SistemZaUrejanjeNaročilKnjižnjica.KratkaMajica.izracunCene">
+            <summary>
+            Izračuna ceno
+            </summary>
+            <returns>Končna cena</returns>
+        </member>
+        <member name="M:SistemZaUrejanjeNaročilKnjižnjica.KratkaMajica.VrniPodrobnosti">
+            <summary>
+            Vrne vse podrobnosti kratke majice
+            </summary>
+            <returns>Podrobnosti kratke majice</returns>
+        </member>
+        <member name="T:SistemZaUrejanjeNaročilKnjižnjica.Hoodie">
+            <summary>
+            Razred za pulover
+            </summary>
+        </member>
+        <member name="M:SistemZaUrejanjeNaročilKnjižnjica.Hoodie.#ctor(System.String,System.Decimal,System.String,System.String,System.Boolean)">
+            <summary>
+            Konstruktor ki ustvari pulover
+            </summary>
+            <param name="ime">Ime</param>
+            <param name="cena">Cena puloverja</param>
+            <param name="barva">Barva puloverja</param>
+            <param name="debelina">Debelina puloverja</param>
+            <param name="zadrga">Ali ima zadrgo ali ne</param>
+        </member>
+        <member name="M:SistemZaUrejanjeNaročilKnjižnjica.Hoodie.izracunCene">
+            <summary>
+            Izracuna ceno puloverja
+            </summary>
+            <returns>Končna cena</returns>
+        </member>
+        <member name="M:SistemZaUrejanjeNaročilKnjižnjica.Hoodie.VrniPodrobnosti">
+            <summary>
+            Vrne podrobnosti puloverja
+            </summary>
+            <returns>Podrobnosti puloverja</returns>
+        </member>
+        <member name="T:SistemZaUrejanjeNaročilKnjižnjica.Kupec">
+            <summary>
+            Razred za kupca
+            </summary>
+        </member>
+        <member name="M:SistemZaUrejanjeNaročilKnjižnjica.Kupec.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            Ustvarimo kupca
+            </summary>
+            <param name="ime">Ime kupca</param>
+            <param name="priimek">Priimek kupca</param>
+            <param name="telst">Telefonska številka kupca</param>
+            <param name="email">Email kupca</param>
+        </member>
+        <member name="T:SistemZaUrejanjeNaročilKnjižnjica.NaročiloIzdelka">
+            <summary>
+            Razred za eno postavko
+            </summary>
+        </member>
+        <member name="M:SistemZaUrejanjeNaročilKnjižnjica.NaročiloIzdelka.#ctor(SistemZaUrejanjeNaročilKnjižnjica.Artikel,System.Int32)">
+            <summary>
+            Konstrukor ki naredi eno postavko
+            </summary>
+            <param name="artikel">Artikel</param>
+            <param name="količina">Količina</param>
+        </member>
+        <member name="M:SistemZaUrejanjeNaročilKnjižnjica.NaročiloIzdelka.op_Addition(SistemZaUrejanjeNaročilKnjižnjica.NaročiloIzdelka,SistemZaUrejanjeNaročilKnjižnjica.NaročiloIzdelka)">
+            <summary>
+            Operator da sešteje dve postavki
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SistemZaUrejanjeNaročilKnjižnjica.NaročiloIzdelka.Finalize">
+            <summary>
+            Destruktor
+            </summary>
+        </member>
+        <member name="T:SistemZaUrejanjeNaročilKnjižnjica.Naročilo">
+            <summary>
+            Razred za upravljanje naročila
+            </summary>
+        </member>
+        <member name="T:SistemZaUrejanjeNaročilKnjižnjica.Naročilo.PostavkaHandler">
+            <summary>
+            Delegat za postavko ki smo jo dodali
+            </summary>
+            <param name="sender"></param>
+            <param name="postavka"></param>
+        </member>
+        <member name="T:SistemZaUrejanjeNaročilKnjižnjica.Naročilo.CenaHandler">
+            <summary>
+            Delegat za spremembo cene
+            </summary>
+            <param name="sender"></param>
+            <param name="cena"></param>
+        </member>
+        <member name="E:SistemZaUrejanjeNaročilKnjižnjica.Naročilo.PostavkaDodana">
+            <summary>
+            Dogodek ob dodaji nove postavke
+            </summary>
+        </member>
+        <member name="E:SistemZaUrejanjeNaročilKnjižnjica.Naročilo.CenaSpremenjena">
+            <summary>
+            Dogodek ob spremembi cene
+            </summary>
+        </member>
+        <member name="M:SistemZaUrejanjeNaročilKnjižnjica.Naročilo.Dodaj(SistemZaUrejanjeNaročilKnjižnjica.NaročiloIzdelka)">
+            <summary>
+            Doda novo postavko
+            </summary>
+            <param name="n"></param>
+        </member>
+        <member name="M:SistemZaUrejanjeNaročilKnjižnjica.Naročilo.OnPostavkaDodana(SistemZaUrejanjeNaročilKnjižnjica.NaročiloIzdelka)">
+            <summary>
+            Sproži dogodek ko se postavka doda
+            </summary>
+            <param name="p"></param>
+        </member>
+        <member name="M:SistemZaUrejanjeNaročilKnjižnjica.Naročilo.OnCenaSpremenjena(System.Decimal)">
+            <summary>
+            Sproži dogodek ko se cena spremeni
+            </summary>
+            <param name="cena"></param>
+        </member>
+    </members>
+</doc>
